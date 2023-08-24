@@ -1,0 +1,33 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: cups4j-cups-client
+  namespace: cups
+  labels:
+    app: cups4j-cups-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cups4j-cups-client
+  template:
+    metadata:
+      labels:
+        app: cups4j-cups-client
+    spec:
+      restartPolicy: Always
+      serviceAccountName: client-cups-client
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 7
+      containers:
+        - name: cups-client
+          securityContext:
+            runAsUser: 1000
+            runAsNonRoot: true
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: Always
+          image: 'quay.io/wuzeng/cups4j-test-app:v3'
